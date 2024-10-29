@@ -28,9 +28,9 @@ const PreviewCard: React.FC<PreviewCardProps> = ({ title }) => {
       <h1 className="p-3 text-xl font-extrabold text-gray-900 border-b">
         {title}
       </h1>
-      {happenings.map((item) => {
+      {happenings.map((item, index) => {
         return (
-          <div className="p-3 hover:bg-gray-100 cursor-pointer border-b transition">
+          <div className="p-3 hover:bg-gray-100 cursor-pointer border-b transition" key={index}>
             <div>
               <h2 className="font-bold text-gray-800 text-md">{item.title}</h2>
               <p className="text-xs text-gray-400">{item.count}</p>

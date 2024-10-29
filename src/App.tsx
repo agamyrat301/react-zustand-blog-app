@@ -1,63 +1,86 @@
-import React, { useState, useEffect } from "react";
-import Navbar from "./components/Navbar";
+import React, { useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import MasterLayout from "./layouts/MasterLayout";
+import Details from "./components/Details";
+import Home from "./components/Home";
+import Login from "./components/Auth/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
+import AdminLayout from "./layouts/AdminLayout";
+import Dashboard from "./components/Admin/Dashboard";
+import Posts from "./components/Admin/Posts";
+import Users from "./components/Admin/Users";
+import useAuthStore from "./stores/useAuthStore";
 import axiosInstance from "./axiosConfig";
-import { Post } from "./types/Post";
-import { Category } from "./types/Category";
-import Left from "./components/Left";
-import Right from "./components/Right";
-import { useCategoryStore } from "./stores/useCategoryStore";
-import PreviewCard from "./components/PreviewCard";
 
-function App() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const { categories, setCategories } = useCategoryStore();
+const App: React.FC = () => {
+  const { setToken, setUser, setLoading, setAuthenticated, setAdmin } = useAuthStore();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Make both API calls concurrently
-        const [postsResponse, categoriesResponse] = await Promise.all([
-          axiosInstance.get("posts"),
-          axiosInstance.get("categories"), // Replace with your actual endpoint for categories
-        ]);
-
-        // Set state for posts and categories
-        setPosts(postsResponse.data);
-        setCategories(categoriesResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    const initializeAuth = async () => {
+      setLoading(true)
+      const storedToken = localStorage.getItem('jwtToken');
+      if (storedToken) {
+        setToken(storedToken);
+        try {
+          const response = await axiosInstance.get('me', {
+            headers: { Authorization: `Bearer ${storedToken}` },
+          });
+          setUser(response.data.user);
+          setAdmin(response.data.is_admin);
+          setAuthenticated(true); // Set isAuthenticated to true if the profile is successfully fetched
+        } catch (error) {
+          console.error('Failed to fetch user profile:', error);
+          setAuthenticated(false);
+        }
+      } else {
+        setAuthenticated(false);
       }
+      setLoading(false); // Indicate loading is complete
     };
 
-    fetchData();
-  }, []);
+    initializeAuth();
+  }, [setToken, setUser, setLoading, setAuthenticated, setAdmin]);
+
 
   return (
-    <div>
-      <div className="min-h-full">
-        <div className="grid grid-cols-12 mx-auto sm:px-6 lg:max-w-7xl lg:px-8 lg:gap-5">
-          <div className="hidden bg-red-500 md:block xs:col-span-1 xl:col-span-2 ">
-            <div className="sticky top-0">
-              <Left />
-            </div>
-          </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-          <main className="col-span-12 bg-red-500 md:col-span-8 xl:col-span-6">
-            dwq
-          </main>
+        {/* Protected routes for regular users */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <MasterLayout />
+            </PrivateRoute>
+          }
+        >
+          <Route index element={<Home />} />
+          <Route path="/details" element={<Details />}></Route>
+        </Route>
 
-          <div className="hidden md:block  xl:col-span-4 md:col-span-3">
-            <div className="sticky top-0">
-              <Right/>
-            </div>
-
-
-
-          </div>
-        </div>
-      </div>
-    </div>
+        {/* Protected routes for admin */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />{" "}
+          {/* Default admin dashboard page */}
+          <Route path="posts" element={<Posts />} />{" "}
+          {/* Additional admin page */}
+          <Route path="users" element={<Users />} />{" "}
+          {/* Additional admin page */}
+          {/* Add more admin routes as needed */}
+        </Route>
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
