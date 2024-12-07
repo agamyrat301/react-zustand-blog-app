@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../axiosConfig";
-import { Post } from "../types/Post";
 import Left from "../components/Left";
 import Right from "../components/Right";
 import { useCategoryStore } from "../stores/useCategoryStore";
+import { usePostStore } from "../stores/usePostStore";
+
 import { Outlet, Link } from 'react-router-dom';
 
 function MasterLayout() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [page, setPage] = useState(11);
+
+  const { posts, setPosts } = usePostStore();
   const { categories, setCategories } = useCategoryStore();
 
   useEffect(() => {
@@ -15,7 +18,7 @@ function MasterLayout() {
       try {
         // Make both API calls concurrently
         const [postsResponse, categoriesResponse] = await Promise.all([
-          axiosInstance.get("posts"),
+          axiosInstance.get(`posts?page=${page}`),
           axiosInstance.get("categories"), // Replace with your actual endpoint for categories
         ]);
 

@@ -72,6 +72,37 @@ const Sidebar = () => {
                     </span>
                   </Link>
                 </li>
+
+                <li>
+                  <Link
+                    to={`/admin/categories`}
+                    className="flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group"
+                  >
+                    <svg
+                      className="w-6 h-6 text-gray-500 transition duration-75 group-hover:text-gray-900 "
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1em"
+                      height="1em"
+                      viewBox="0 0 48 48"
+                    >
+                      <g
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinejoin="round"
+                        strokeWidth="4"
+                      >
+                        <path d="M44 14L24 4L4 14v20l20 10l20-10V14Z"></path>
+                        <path
+                          strokeLinecap="round"
+                          d="m4 14l20 10m0 20V24m20-10L24 24M34 9L14 19"
+                        ></path>
+                      </g>
+                    </svg>
+                    <span className="ml-3" sidebar-toggle-item="">
+                      Categories
+                    </span>
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

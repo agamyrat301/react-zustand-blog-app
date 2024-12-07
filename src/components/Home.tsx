@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Loading from "./Loading";
 import PostForm from "./PostForm";
+import PostsIndex from "./Posts/index";
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
@@ -16,6 +17,8 @@ const Home = () => {
       ) : (
         <div>
           <PostForm/>
+          <PostsIndex/>
+          
         </div>
       )}
     </div>

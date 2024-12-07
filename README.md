@@ -1,5 +1,10 @@
 # Getting Started with Create React App
 
+admin user:edmund.ritchie@example.com 
+password:password
+
+platform user: christina32@example.com
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

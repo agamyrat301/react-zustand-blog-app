@@ -9,6 +9,7 @@ import AdminRoute from "./components/AdminRoute";
 import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./components/Admin/Dashboard";
 import Posts from "./components/Admin/Posts";
+import Categories from "./components/Admin/Categories";
 import Users from "./components/Admin/Users";
 import useAuthStore from "./stores/useAuthStore";
 import axiosInstance from "./axiosConfig";
@@ -42,7 +43,6 @@ const App: React.FC = () => {
     initializeAuth();
   }, [setToken, setUser, setLoading, setAuthenticated, setAdmin]);
 
-
   return (
     <Router>
       <Routes>
@@ -72,9 +72,12 @@ const App: React.FC = () => {
         >
           <Route index element={<Dashboard />} />{" "}
           {/* Default admin dashboard page */}
-          <Route path="posts" element={<Posts />} />{" "}
           {/* Additional admin page */}
           <Route path="users" element={<Users />} />{" "}
+
+          <Route path="posts" element={<Posts />} />{" "}
+          <Route path="categories" element={<Categories />} />{" "}
+
           {/* Additional admin page */}
           {/* Add more admin routes as needed */}
         </Route>
