@@ -8,22 +8,20 @@ import { usePostStore } from "../stores/usePostStore";
 import { Outlet, Link } from 'react-router-dom';
 
 function MasterLayout() {
-  const [page, setPage] = useState(11);
+  
 
-  const { posts, setPosts } = usePostStore();
+  //const { posts, setPosts } = usePostStore();
   const { categories, setCategories } = useCategoryStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Make both API calls concurrently
-        const [postsResponse, categoriesResponse] = await Promise.all([
-          axiosInstance.get(`posts?page=${page}`),
-          axiosInstance.get("categories"), // Replace with your actual endpoint for categories
-        ]);
+        const  categoriesResponse = await axiosInstance.get("categories"); // Replace with your actual endpoint for categories
 
+        console.log(categoriesResponse,'categoriesResponse HERE')
         // Set state for posts and categories
-        setPosts(postsResponse.data);
+        //setPosts(postsResponse.data);
         setCategories(categoriesResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
